@@ -1,0 +1,1 @@
+"""OneBot v11 transport."""

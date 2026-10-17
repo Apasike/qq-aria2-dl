@@ -1,0 +1,1 @@
+"""aria2 JSON-RPC integration."""
