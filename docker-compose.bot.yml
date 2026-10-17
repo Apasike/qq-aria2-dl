@@ -1,0 +1,19 @@
+# QQ bot (deploy where it can reach NapCat and aria2)
+# start: docker compose -f docker-compose.bot.yml up -d --build
+services:
+  bot:
+    build: .
+    container_name: qq-aria2-dl
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      APP_HOST: 0.0.0.0
+      STORAGE_DB_PATH: /data/bot/bot.db
+      # point to your aria2 server
+      ARIA2_RPC_URL: http://127.0.0.1:6800/jsonrpc
+      ARIA2_SECRET: please-change-me
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data/bot:/data/bot

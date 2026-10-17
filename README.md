@@ -118,13 +118,107 @@ ws://127.0.0.1:8080/onebot/v11/ws?access_token=你的ONEBOT_TOKEN
 
 ## Docker 部署
 
-项目自带 `Dockerfile` 和 `docker-compose.yml`：
+aria2 和 bot 拆成两个 compose，可以分别部署在不同机器上。
 
-```bash
-docker compose up -d --build
-```
+### Dockerfile
 
-`docker-compose.yml` 会启动 `aria2`（p3terx/aria2-pro）和 `bot` 两个服务；NapCat 需要单独部署，并把反向 WS 指向 `http://宿主机:8080/onebot/v11/ws`。
+`dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY pyproject.toml README.md ./
+COPY src ./src
+
+RUN pip install --no-cache-dir .
+
+ENV APP_HOST=0.0.0.0
+EXPOSE 8080
+
+CMD ["qq-aria2-dl"]
+`
+
+### 1. 部署 aria2（下载服务器上）
+
+docker-compose.aria2.yml：
+
+`yaml
+services:
+  aria2-pro:
+    container_name: aria2-pro
+    image: p3terx/aria2-pro
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK_SET=022
+      - RPC_SECRET=please-change-me
+      - RPC_PORT=6800
+      - LISTEN_PORT=6888
+      - DISK_CACHE=64M
+      - IPV6_MODE=false
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data/aria2:/config
+      - ./data/downloads:/downloads
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+
+  ariang:
+    container_name: ariang
+    image: p3terx/ariang
+    network_mode: host
+    command: --port 6880
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+`
+
+启动：
+
+`ash
+docker compose -f docker-compose.aria2.yml up -d
+`
+
+### 2. 部署 bot（能访问 NapCat 和 aria2 的机器上）
+
+docker-compose.bot.yml：
+
+`yaml
+services:
+  bot:
+    build: .
+    container_name: qq-aria2-dl
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      APP_HOST: 0.0.0.0
+      STORAGE_DB_PATH: /data/bot/bot.db
+      ARIA2_RPC_URL: http://127.0.0.1:6800/jsonrpc
+      ARIA2_SECRET: please-change-me
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data/bot:/data/bot
+`
+
+把 ARIA2_RPC_URL 改成 aria2 服务器的地址，ARIA2_SECRET 和 aria2 的 RPC_SECRET 保持一致，然后：
+
+`ash
+docker compose -f docker-compose.bot.yml up -d --build
+`
+
+NapCat 单独部署，反向 WebSocket 指向：
+
+`	ext
+ws://bot所在机器:8080/onebot/v11/ws?access_token=你的ONEBOT_TOKEN
+`
 
 ## 健康检查
 

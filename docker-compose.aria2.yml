@@ -1,0 +1,37 @@
+# aria2 download service (deploy on your download server)
+# start: docker compose -f docker-compose.aria2.yml up -d
+services:
+  aria2-pro:
+    container_name: aria2-pro
+    image: p3terx/aria2-pro
+    network_mode: host
+    environment:
+      - PUID=1000                   # change to your user id, or keep 65534
+      - PGID=1000
+      - UMASK_SET=022
+      - RPC_SECRET=please-change-me # bot ARIA2_SECRET must match this
+      - RPC_PORT=6800
+      - LISTEN_PORT=6888
+      - DISK_CACHE=64M
+      - IPV6_MODE=false
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data/aria2:/config
+      - ./data/downloads:/downloads
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+
+  # optional web UI
+  ariang:
+    container_name: ariang
+    image: p3terx/ariang
+    network_mode: host
+    command: --port 6880
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
