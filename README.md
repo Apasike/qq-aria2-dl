@@ -187,9 +187,9 @@ docker compose -f docker-compose.aria2.yml up -d
 
 ### 2. 部署 bot（能访问 NapCat 和 aria2 的机器上）
 
-docker-compose.bot.yml（全部配置都用环境变量，不需要 .env 文件）：
+`docker-compose.bot.yml`（全部配置都用环境变量，不需要 `.env` 文件）：
 
-`yaml
+```yaml
 services:
   bot:
     build: .
@@ -235,19 +235,19 @@ services:
       - "8080:8080"
     volumes:
       - ./data/bot:/data/bot
-`
+```
 
-把 ARIA2_RPC_URL 改成 aria2 服务器的地址，ARIA2_SECRET 和 aria2 的 RPC_SECRET 保持一致，然后：
+把 `ARIA2_RPC_URL` 改成 aria2 服务器的地址，`ARIA2_SECRET` 和 aria2 的 `RPC_SECRET` 保持一致，然后：
 
-`ash
+```bash
 docker compose -f docker-compose.bot.yml up -d --build
-`
+```
 
 NapCat 单独部署，反向 WebSocket 指向：
 
-`	ext
+```text
 ws://bot所在机器:8080/onebot/v11/ws?access_token=你的ONEBOT_TOKEN
-`
+```
 
 ## 健康检查
 
