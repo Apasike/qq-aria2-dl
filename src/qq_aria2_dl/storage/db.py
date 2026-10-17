@@ -1,3 +1,5 @@
+"""SQLite 数据库访问：任务、去重键、下载白名单。"""
+
 from __future__ import annotations
 
 import logging

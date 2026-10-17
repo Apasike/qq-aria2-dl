@@ -1,3 +1,5 @@
+"""日志初始化工具。"""
+
 from __future__ import annotations
 
 import logging

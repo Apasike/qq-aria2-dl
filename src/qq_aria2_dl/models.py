@@ -1,3 +1,5 @@
+"""数据模型：ProgressSnapshot 等。"""
+
 from __future__ import annotations
 
 import time

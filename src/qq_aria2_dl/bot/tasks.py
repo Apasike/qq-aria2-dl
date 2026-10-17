@@ -1,3 +1,5 @@
+"""任务服务：提交、取消、进度查询与格式化。"""
+
 from __future__ import annotations
 
 import asyncio

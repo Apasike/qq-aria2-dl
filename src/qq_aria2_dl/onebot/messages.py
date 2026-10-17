@@ -1,3 +1,5 @@
+"""OneBot 消息段解析与构造工具。"""
+
 from __future__ import annotations
 
 from typing import Any

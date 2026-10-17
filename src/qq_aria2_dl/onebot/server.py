@@ -1,3 +1,5 @@
+"""OneBot 反向 WebSocket 服务端处理。"""
+
 from __future__ import annotations
 
 import hmac

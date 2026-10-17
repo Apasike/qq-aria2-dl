@@ -1,3 +1,5 @@
+"""消息路由：命令分发与群自动下载。"""
+
 from __future__ import annotations
 
 import asyncio

@@ -1,3 +1,5 @@
+"""OneBot 客户端：维护 WS 连接、action 调用与 echo 匹配。"""
+
 from __future__ import annotations
 
 import asyncio

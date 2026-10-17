@@ -1,1 +1,2 @@
-"""Bot-level routing, ACL, URL helpers, rate limiting and task orchestration."""
+"""Bot 业务层：路由、ACL、URL、限流与任务编排。"""
+

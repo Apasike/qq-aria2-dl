@@ -1,3 +1,5 @@
+"""权限控制：下载白名单与管理员判定。"""
+
 from __future__ import annotations
 
 import asyncio

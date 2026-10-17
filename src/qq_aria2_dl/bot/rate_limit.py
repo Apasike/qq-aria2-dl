@@ -1,3 +1,5 @@
+"""进程内滑动窗口限流器。"""
+
 from __future__ import annotations
 
 import asyncio

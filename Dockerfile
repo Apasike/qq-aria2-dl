@@ -1,3 +1,5 @@
+# qq-aria2-dl bot image
+# build: docker build -t qq-aria2-dl .
 FROM python:3.11-slim
 
 WORKDIR /app

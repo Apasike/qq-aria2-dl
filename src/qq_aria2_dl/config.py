@@ -1,3 +1,5 @@
+"""配置加载与校验：从 .env 读取 Settings。"""
+
 from __future__ import annotations
 
 import json

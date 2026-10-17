@@ -1,3 +1,5 @@
+"""aria2 状态对账、完成通知与磁盘守卫。"""
+
 from __future__ import annotations
 
 import asyncio

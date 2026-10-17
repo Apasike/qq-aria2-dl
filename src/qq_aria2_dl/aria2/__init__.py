@@ -1,1 +1,2 @@
-"""aria2 JSON-RPC integration."""
+"""aria2 集成层。"""
+

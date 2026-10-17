@@ -1,1 +1,2 @@
-"""OneBot v11 transport."""
+"""OneBot v11 传输层。"""
+

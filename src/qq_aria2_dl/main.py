@@ -1,3 +1,5 @@
+"""FastAPI 应用装配、生命周期管理与 uvicorn 启动。"""
+
 from __future__ import annotations
 
 import asyncio
