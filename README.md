@@ -187,38 +187,67 @@ docker compose -f docker-compose.aria2.yml up -d
 
 ### 2. 部署 bot（能访问 NapCat 和 aria2 的机器上）
 
-`docker-compose.bot.yml`：
+docker-compose.bot.yml（全部配置都用环境变量，不需要 .env 文件）：
 
-```yaml
+`yaml
 services:
   bot:
     build: .
     container_name: qq-aria2-dl
     restart: unless-stopped
-    env_file:
-      - .env
     environment:
       APP_HOST: 0.0.0.0
-      STORAGE_DB_PATH: /data/bot/bot.db
+      APP_PORT: 8080
+      LOG_LEVEL: INFO
+
+      ONEBOT_PATH: /onebot/v11/ws
+      ONEBOT_TOKEN: please-change-me
+      ONEBOT_HEARTBEAT_TIMEOUT_SEC: 90
+      ONEBOT_SEND_TIMEOUT_SEC: 10
+
       ARIA2_RPC_URL: http://127.0.0.1:6800/jsonrpc
       ARIA2_SECRET: please-change-me
+      ARIA2_POLL_INTERVAL_SEC: 2
+      ARIA2_DOWNLOAD_DIR: ""
+      ARIA2_MAX_CONCURRENT: 3
+      ARIA2_SPLIT: 1
+      ARIA2_MAX_CONNECTION_PER_SERVER: 1
+
+      STORAGE_DB_PATH: /data/bot/bot.db
+      STORAGE_TASK_RETENTION_DAYS: 30
+
+      DEDUPE_TTL_SEC: 600
+      DEDUPE_SCOPE: chat
+
+      RATE_LIMIT_PER_USER_PER_10MIN: 3
+      RATE_LIMIT_PER_GROUP_PER_10MIN: 10
+
+      DOWNLOAD_ALLOWED_USERS: ""
+      ADMIN_USERS: ""
+
+      ALLOWED_SCHEMES: http,https
+      MAX_URL_LENGTH: 8192
+      DOWNLOAD_USER_AGENT: ""
+      DOWNLOAD_REFERER: ""
+
+      GROUPS: '{"123456":{"enabled":true,"auto_download":true,"require_at":false,"allowed_users":[],"max_urls_per_message":3}}'
     ports:
       - "8080:8080"
     volumes:
       - ./data/bot:/data/bot
-```
+`
 
-把 `ARIA2_RPC_URL` 改成 aria2 服务器的地址，`ARIA2_SECRET` 和 aria2 的 `RPC_SECRET` 保持一致，然后：
+把 ARIA2_RPC_URL 改成 aria2 服务器的地址，ARIA2_SECRET 和 aria2 的 RPC_SECRET 保持一致，然后：
 
-```bash
+`ash
 docker compose -f docker-compose.bot.yml up -d --build
-```
+`
 
 NapCat 单独部署，反向 WebSocket 指向：
 
-```text
+`	ext
 ws://bot所在机器:8080/onebot/v11/ws?access_token=你的ONEBOT_TOKEN
-```
+`
 
 ## 健康检查
 
