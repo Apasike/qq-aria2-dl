@@ -107,6 +107,9 @@ class Settings(BaseSettings):
     # global admins (comma separated)
     admin_users: Annotated[list[str], NoDecode] = Field(default_factory=list)
 
+    # only these groups may trigger downloads (empty = no group restriction)
+    allowed_groups: Annotated[list[str], NoDecode] = Field(default_factory=list)
+
     # url safety (comma separated)
     allowed_schemes: Annotated[list[str], NoDecode] = Field(
         default_factory=lambda: ["http", "https"]
@@ -115,7 +118,7 @@ class Settings(BaseSettings):
     download_user_agent: str = ""  # empty => let aria2 use its own user-agent
     download_referer: str = ""
 
-    @field_validator("download_allowed_users", "admin_users", "allowed_schemes", mode="before")
+    @field_validator("download_allowed_users", "admin_users", "allowed_groups", "allowed_schemes", mode="before")
     @classmethod
     def _parse_str_list(cls, v: Any) -> Any:
         if v is None:

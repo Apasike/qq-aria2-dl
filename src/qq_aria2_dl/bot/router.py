@@ -74,6 +74,9 @@ class Router:
 
         if message_type == "group":
             group_id = payload.get("group_id")
+            if not self._group_allowed(group_id):
+                logger.info("ignore non-allowed group group_id=%s user_id=%s", group_id, user_id)
+                return
             cfg = self.settings.group(group_id)
             if cfg is not None and not cfg.enabled:
                 logger.info("ignore disabled group group_id=%s user_id=%s", group_id, user_id)
@@ -94,6 +97,12 @@ class Router:
             user_id=int(user_id),
             message_id=message_id,
         )
+
+    def _group_allowed(self, group_id: int | str) -> bool:
+        allowed = self.settings.allowed_groups
+        if not allowed:
+            return True
+        return str(group_id) in allowed
 
     async def _route_group(
         self,
